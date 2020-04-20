@@ -3,6 +3,7 @@ import classes from '../Layout/Layout.module.css'
 // import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle'
 // import Drawer from '../../components/Navigation/Drawer/Drawer'
 import Menu from '../../components/Menu/Menu'
+import MainPage from '../../containers/MainPage/MainPage'
 
 import {
   BrowserRouter as Router,
@@ -32,6 +33,8 @@ class Layout extends Component {
     return (
       <div className={classes['Layout']}>
         <Menu />
+
+        <MainPage />
         
        
 

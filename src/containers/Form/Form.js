@@ -71,6 +71,7 @@ export default class Form extends Component {
   }
 
   onChangeHandler = (event, controlName) => {
+    // создание локальной копии состояния
     const formControls = { ...this.state.formControls }
     const control = { ...formControls[controlName] }
 
