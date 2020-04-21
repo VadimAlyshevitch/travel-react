@@ -2,150 +2,166 @@ import React, {Component} from 'react'
 import classes from '../Form/Form.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
+import is from 'is_js'
+import Axios from 'axios'
 
+export default class Form extends Component {
 
-function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
+  state = {
+    isFormValid : false,
+    formControls: {
+      email: {
+        value: '',
+        type: 'email',
+        label: 'Email',
+        errorMessage: 'Введите корректный email',
+        valid: false,
+        touched: false,
+        validation: {
+          required: true,
+          email: true
+        }
+      },
+      password: {
+        value: '',
+        type: 'password',
+        label: 'Пароль',
+        errorMessage: 'Введите корректный пароль',
+        valid: false,
+        touched: false,
+        validation: {
+          required: true,
+          minLength: 6
+        }
+      }
+    }
+  }
+
+  loginHandler = async () => {
+    const authData = {
+      email : this.state.formControls.email.value,
+      password : this.state.formControls.password.value,
+      returnSecureToken : true
+    }
+    try {
+      const response = await Axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCv5JM_Gfyl_rn_8zUYb0LrSazsnCQlDUE', authData)
+      console.log(response.data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  registerHandler = async () => {
+
+    const authData = {
+      email : this.state.formControls.email.value,
+      password : this.state.formControls.password.value,
+      returnSecureToken : true
+    }
+    try {
+      const response = await Axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCv5JM_Gfyl_rn_8zUYb0LrSazsnCQlDUE', authData)
+      console.log(response.data)
+    } catch (e) {
+      console.log(e)
+    }
+ 
+  }
+
+  submitHandler = event => {
+    event.preventDefault()
+  }
+
+  validateControl(value, validation) {
+    if (!validation) {
+      return true
+    }
+
+    let isValid = true
+
+    if (validation.required) {
+      isValid = value.trim() !== '' && isValid
+    }
+
+    if (validation.email) {
+      isValid = is.email(value) && isValid
+    }
+
+    if (validation.minLength) {
+      isValid = value.length >= validation.minLength && isValid
+    }
+
+    return isValid
+  }
+
+  onChangeHandler = (event, controlName) => {
+    // создание локальной копии состояния
+    const formControls = { ...this.state.formControls }
+    const control = { ...formControls[controlName] }
+
+    control.value = event.target.value
+    control.touched = true
+    control.valid = this.validateControl(control.value, control.validation)
+
+    formControls[controlName] = control
+
+    let isFormValid = true
+
+    Object.keys(formControls).forEach((name)=>{
+        isFormValid = formControls[name].valid && isFormValid
+    })
+
+    this.setState({
+      formControls, isFormValid
+    })
+  }
+
+  renderInputs() {
+    return Object.keys(this.state.formControls).map((controlName, index) => {
+      const control = this.state.formControls[controlName]
+      return (
+        <Input
+          key={controlName + index}
+          type={control.type}
+          value={control.value}
+          valid={control.valid}
+          touched={control.touched}
+          label={control.label}
+          shouldValidate={!!control.validation}
+          errorMessage={control.errorMessage}
+          onChange={event => this.onChangeHandler(event, controlName)}
+        />
+      )
+    })
+  }
+
+  render() {
+    return (
+      <div className={classes.Form}>
+        <div>
+          <h1>Авторизация</h1>
+
+          <form onSubmit={this.submitHandler} className={classes.FormAuth}>
+
+            { this.renderInputs() }
+
+            <Button
+              type="success"
+              onClick={this.loginHandler}
+              disabled = {!this.state.isFormValid}
+            >
+              Войти
+            </Button>
+
+            <Button
+              type="primary"
+              onClick={this.registerHandler}
+              disabled = {!this.state.isFormValid}
+            >
+              Зарегистрироваться
+            </Button>
+          </form>
+        </div>
+      </div>
+    )
+  }
 }
-
-class Form extends React.Component {
-
-    state = {
-        formControls : {
-            email : {
-                value : '',
-                type : 'email',
-                label : 'email',
-                erroreMessage : 'Нет такой почты',
-                valid: false,
-                touched : false,
-                validation : {
-                    required : true,
-                    email : true
-                }
-            },
-            password : {
-                value : '',
-                type : 'password',
-                label : 'password',
-                erroreMessage : 'Неверный пароль',
-                valid: false,
-                touched : false,
-                validation : {
-                    required : true,
-                    minLenght : 6
-                }
-            }
-        }
-
-    }
-
-    // checkUser = () =>{
-    //     const pizza = ['p', 'i', 'z', 'z', 'a']
-
-    //     let a = pizza.indexOf('z')
-    //     a += pizza.indexOf('i') + 3
-
-    //     console.log(a);
-    // }
-
-    loginHendler = ( ) =>{
-
-    }
-
-    registerHandler = ( ) => {
-
-    }
-    submitHandler = event => {
-        event.preventDefault()
-    }
-    validateControl(value, validation) {
-        if (!validation) {
-            return true
-        }
-
-        let isValid = true
-
-        if (validation.required) {
-            isValid = value.trim() !== '' && isValid
-        }
-
-        if (validation.email) {
-            isValid = validateEmail(value) && isValid
-             
-        }
-        if (validation.minLenght) {
-            isValid = value.lenght >= validation.minLenght && isValid
-        }
-
-        return isValid
-    }
-    onChangeHandler = (event, controlName) => {
-        console.log(`${controlName}: ` + event.target.value)
-        // получение копии состояния, чтобы избежать его мутации
-
-        const formControls = {...this.state.formControls}
-        const control = { ...formControls[controlName] }
- //  проверка на валидность импуты
-        control.value = event.target.value
-        control.touched = true
-        control.valid = this.validateControl(control.valid, control.validation)
-
-        //обновить локальную копию formControls
-        formControls[controlName] = control
-        this.setState({
-            formControls
-        })
-    }
-    renderInputs() {
-        const inputs = Object.keys(this.state.formControls).map((controlName, index)=>{
-            const control = this.state.formControls[controlName]
-            return (
-                <Input 
-                    key={controlName + index}
-                    type={control.type}
-                    value = {control.value}
-                    valid={control.valid}
-                    touched={control.touched}
-                    label={control.label}
-                    shouldValidate={true}
-                    erroreMessage={control.erroreMessage}  
-                    onChange={event => this.onChangeHandler(event,controlName)}  
-                />
-            )
-        })
-        return inputs
-
-    }
-
-
-    render(){
-        return(
-
-            <div className={classes.Form}>
-                <div className="container">
-                    <div className="form-row" style={{flexFlow : 'column'}}>
-                        <h1>Авторизация</h1>
-                        <form className={classes.FormAuth} onSubmit={this.submitHandler}> 
-                              {
-                                  this.renderInputs()
-                              }
-                            {/* <Input label="Login" erroreMessage="ERRORE" />
-                            
-                            <Input label="Password"/> */}
-
-                            <Button type="succsess" onClick={this.loginHendler}> ENTER </Button>   
-                            <Button type="succsess" onClick={this.registerHandler}> Зарегестрироваться </Button> 
-                        </form>
-                    </div>
-                 </div>
-            </div>
-    
-       
-        )
-    }
-}
-
-
-export default Form

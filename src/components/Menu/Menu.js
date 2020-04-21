@@ -15,6 +15,7 @@ import CreateTour from '../../containers/CreateTour/CreateTour'
 
 
 
+
 class Menu extends React.Component{
 
 
@@ -29,16 +30,16 @@ class Menu extends React.Component{
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
                                 <li className="nav-item ">
-                                <Link className="nav-link" exact to="/">Главная</Link>
+                                <Link className="nav-link"  to="/">Главная</Link>
                                 </li>
                                 <li className="nav-item">
-                                <Link className="nav-link" exact to="/createtour">Создать свой план путешествия</Link>
+                                <Link className="nav-link"  to="/createtour">Создать свой план путешествия</Link>
                                 </li>
                                 <li className="nav-item">
-                                <Link className="nav-link"  exact to="/quizes">Готовый план путешествия</Link>
+                                <Link className="nav-link"   to="/quizes">Готовый план путешествия</Link>
                                 </li>
                                 <li className="nav-item">
-                                <Link className="nav-link" exact to="/form">Авторизация</Link>
+                                <Link className="nav-link"  to="/form">Авторизация</Link>
                                 </li>
                             </ul>
                         </div>

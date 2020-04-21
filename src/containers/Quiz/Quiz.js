@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import classes from '../Quiz/Quiz.module.css'
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz'
 import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
-
+import Axios from 'axios'
 
 class Quiz extends Component {
   state = {
@@ -104,6 +104,17 @@ class Quiz extends Component {
       isFinished : false,
       results : {}
     })
+  }
+
+
+  async componentDidMount() {
+    try {
+      const response = await Axios.get(`https://react-travel-86f0b.firebaseio.com/tour/${this.props.params.id}.json`)
+    
+    } catch(e){
+      console.log(e)
+    }
+
   }
   render() {
     return (

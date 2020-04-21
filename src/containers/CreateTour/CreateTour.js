@@ -4,6 +4,7 @@ import Button from '../../components/UI/Button/Button'
 import {createControl, validate,validateForm} from '../../forCreateTouur/forCreateTourFramework'
 import Input from '../../components/UI/Input/Input'
 import Select from '../../components/UI/Select/Select'
+import Axios from 'axios'
 
 
 function createOptionControl(number) {
@@ -70,11 +71,30 @@ function createOptionControl(number) {
       })
     }
   
-    createQuizHandler = event => {
+    createQuizHandler = async event => {
       event.preventDefault()
+
+      try {
+        await Axios.post('https://react-travel-86f0b.firebaseio.com/tour/tours.json', this.state.quiz)
+        //  обнуление
+        this.setState({
+          quiz : [],
+          isFormValid: false,
+          rightAnswerId: 1,
+          formControls: createFormControls()
+        })
+      } catch (e) {
+        console.log(e)
+      }
+
+      // Axios.post('https://react-travel-86f0b.firebaseio.com/tour/tours.json', this.state.quiz)
+      //   .then(Response => {
+      //     console.log(Response)
+      //   })
+      //   .catch(error => console.log(error))
   
-      console.log(this.state.quiz)
-      // TODO: Server
+      // console.log(this.state.quiz)
+      // // TODO: Server
     }
   
     changeHandler = (value, controlName) => {
